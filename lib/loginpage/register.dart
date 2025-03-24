@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:signspeak/dashboard/homepage.dart';
+import 'package:signspeak/loginpage/login.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -223,9 +224,25 @@ class _RegisterPageState extends State<RegisterPage> {
                                 : Text("Register"),
                       ),
 
-                      SizedBox(height: 20),
-                      Text("Or", style: TextStyle(fontSize: 18)),
-                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment
+                                .center, // Center the text and button
+                        children: [
+                          Text("Already have an account?"),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginPage(),
+                                ),
+                              );
+                            },
+                            child: Text("Login"),
+                          ),
+                        ],
+                      ),
 
                       // Google Sign-In Button
                       //SignInButton(
