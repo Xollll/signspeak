@@ -19,7 +19,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false, 
-    home: SignAnimator()
+
+    routes: {
+    '/login': (context) => const LoginPage(),
+    '/home': (context) => const Homepage(),
+    //'/translation': (context) => const TranslationPage(),
+    '/communication': (context) =>  SignAnimator(),
+  },
+    home: LoginPage()
     );
   }
 }

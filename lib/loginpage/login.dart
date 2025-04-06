@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
         context,
         MaterialPageRoute(
           builder: (context) => Homepage(),
-        ), // Replace with your home screen
+        ), 
       );
     } on FirebaseAuthException catch (e) {
       String message = "No user data found.";
@@ -163,15 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 20),
                     Text("Or", style: TextStyle(fontSize: 20)),
                     SizedBox(height: 20),
-
-                    // Google Sign-In Button
-                    // SignInButton(
-                    // Buttons.google,
-                    // onPressed: () {
-                    // // TODO: Implement Google Sign-In
-                    // print("Google Sign-In clicked");
-                    // },
-                    //),
+                  
                   ],
                 ),
               ),
