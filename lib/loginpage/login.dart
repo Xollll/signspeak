@@ -42,26 +42,6 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       // First, check if the email exists in Firebase Auth
-      List<String> signInMethods = await _auth.fetchSignInMethodsForEmail(
-        _emailController.text.trim(),
-      );
-
-      // If signInMethods list is empty, the email doesn't exist
-      if (signInMethods.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Email not found. Please register as a new user."),
-          ),
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => RegisterPage()),
-        );
-        setState(() {
-          _isLoading = false;
-        });
-        return;
-      }
 
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
