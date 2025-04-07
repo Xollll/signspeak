@@ -37,6 +37,9 @@ dependencies:
   firebase_core: ^3.12.1
   firebase_auth: ^5.5.1
   cloud_firestore: ^5.6.5
+  sign_button: ^2.0.6
+  google_sign_in: ^6.3.0
+  elegant_notification: ^2.4.4
 
 dev_dependencies:
   flutter_test:
@@ -61,33 +64,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-      - assets/images/loginIcon.png
-      - assets/images/sign/A.png
-      - assets/images/sign/B.png
-      - assets/images/sign/C.png
-      - assets/images/sign/D.png
-      - assets/images/sign/E.png
-      - assets/images/sign/F.png
-      - assets/images/sign/G.png
-      - assets/images/sign/H.png
-      - assets/images/sign/I.png
-      - assets/images/sign/J.png
-      - assets/images/sign/K.png
-      - assets/images/sign/L.png
-      - assets/images/sign/M.png
-      - assets/images/sign/N.png
-      - assets/images/sign/O.png
-      - assets/images/sign/P.png
-      - assets/images/sign/Q.png
-      - assets/images/sign/R.png
-      - assets/images/sign/S.png
-      - assets/images/sign/T.png
-      - assets/images/sign/U.png
-      - assets/images/sign/V.png
-      - assets/images/sign/W.png
-      - assets/images/sign/X.png
-      - assets/images/sign/Y.png
-      - assets/images/sign/Z.png
+    - assets/images/loginIcon.png
+  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

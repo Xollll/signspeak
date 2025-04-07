@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:signspeak/dashboard/homepage.dart';
-import 'package:signspeak/loginpage/login.dart';
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -21,6 +22,43 @@ class _RegisterPageState extends State<RegisterPage> {
       TextEditingController();
   bool _isLoading = false;
 
+  // Show success notification
+  void _showSuccessNotification(String message) {
+    ElegantNotification.success(
+      width: 280,
+      title: Text("Success"),
+      description: Text(message),
+      animation: AnimationType.fromTop,
+      position: Alignment.topCenter,
+      isDismissable: true,
+    ).show(context);
+  }
+
+  // Show error notification
+  void _showErrorNotification(String message) {
+    ElegantNotification.error(
+      width: 280,
+      title: Text("Error"),
+      description: Text(message),
+      animation: AnimationType.fromTop,
+      position: Alignment.topCenter,
+      isDismissable: true,
+    ).show(context);
+  }
+
+  Future<bool> _emailExists(String email) async {
+    try {
+      // Method 1: Using fetchSignInMethodsForEmail
+      final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(
+        email,
+      );
+      return methods.isNotEmpty;
+    } catch (e) {
+      print("Error checking email existence: $e");
+      return false;
+    }
+  }
+
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -29,6 +67,21 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     try {
+      bool emailAlreadyExists = await _emailExists(
+        _emailController.text.trim(),
+      );
+
+      if (emailAlreadyExists) {
+        // Show notification for existing email
+        _showErrorNotification(
+          "This email is already registered. Please use a different email or login.",
+        );
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
@@ -52,9 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
       // Ensure user is properly reloaded
       await userCredential.user!.reload();
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Registration Successful!")));
+      _showSuccessNotification("Registration Successful!");
 
       // Stop loading before navigating
       setState(() {
@@ -71,16 +122,12 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       }
     } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? "Registration failed")),
-      );
+      _showErrorNotification(e.message ?? "Registration failed");
       setState(() {
         _isLoading = false;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("An error occurred: ${e.toString()}")),
-      );
+      _showErrorNotification("An error occurred: ${e.toString()}");
       setState(() {
         _isLoading = false;
       });
@@ -134,6 +181,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           prefixIcon: Icon(Icons.account_circle),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter your full name";
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(height: 15),
 
@@ -147,6 +200,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           prefixIcon: Icon(Icons.person),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter a username";
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(height: 15),
 
@@ -186,6 +245,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           prefixIcon: Icon(Icons.lock),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter a password";
+                          } else if (value.length < 6) {
+                            return "Password must be at least 6 characters";
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(height: 15),
 
@@ -200,6 +267,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           prefixIcon: Icon(Icons.lock_outline),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please confirm your password";
+                          } else if (value != _passwordController.text) {
+                            return "Passwords do not match";
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(height: 20),
 
@@ -224,25 +299,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                 : Text("Register"),
                       ),
 
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment
-                                .center, // Center the text and button
-                        children: [
-                          Text("Already have an account?"),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginPage(),
-                                ),
-                              );
-                            },
-                            child: Text("Login"),
-                          ),
-                        ],
-                      ),
+                      SizedBox(height: 20),
+                      Text("Or", style: TextStyle(fontSize: 18)),
+                      SizedBox(height: 20),
 
                       // Google Sign-In Button
                       //SignInButton(
@@ -253,6 +312,30 @@ class _RegisterPageState extends State<RegisterPage> {
                       //},
                       //),
                       SizedBox(height: 20),
+
+                      // Login Link
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Already have an account? ",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Login",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

@@ -3,8 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:signspeak/communication/communicator.dart';
 import 'firebase_options.dart';
 import 'package:signspeak/dashboard/homepage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:signspeak/loginpage/login.dart';
-import 'package:signspeak/loginpage/register.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,16 +18,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false, 
-
-    routes: {
-    '/login': (context) => const LoginPage(),
-    '/home': (context) => const Homepage(),
-    //'/translation': (context) => const TranslationPage(),
-    '/communication': (context) =>  SignAnimator(),
-  },
-    home: LoginPage()
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: LoginPage());
   }
 }
