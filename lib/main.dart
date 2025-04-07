@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
-import 'package:signspeak/dashboard/homepage.dart';
-import 'package:signspeak/loginpage/login.dart';
-import 'package:signspeak/loginpage/register.dart';
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
