@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:signspeak/communication/communicator.dart';
+import 'package:signspeak/tutorialpage/tutorial.dart';
 import 'firebase_options.dart';
 import 'package:signspeak/dashboard/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
   routes: {
     '/login': (context) => const LoginPage(),
     '/home': (context) => const Homepage(),
-    //'/tutorial': (context) => const TutorialPage(),
+    '/tutorial': (context) => const TutorialPage(),
     '/communication': (context) =>  SignAnimator(),
   },
     
