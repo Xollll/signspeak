@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SignAnimator extends StatefulWidget {
   @override
@@ -11,7 +12,10 @@ class _SignAnimatorState extends State<SignAnimator> {
   int currentIndex = 0;
   bool isPlaying = false;
 
-  // Map of letters to image assets
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _spokenText = '';
+
   final Map<String, String> signImages = {
     'A': 'assets/images/sign/A.png',
     'B': 'assets/images/sign/B.png',
@@ -41,7 +45,12 @@ class _SignAnimatorState extends State<SignAnimator> {
     'Z': 'assets/images/sign/Z.png',
   };
 
-  // Convert user input text to sign images
+  @override
+  void initState() {
+    super.initState();
+    _speech = stt.SpeechToText();
+  }
+
   void convertTextToSign(String text) {
     setState(() {
       imagePaths = [];
@@ -58,15 +67,14 @@ class _SignAnimatorState extends State<SignAnimator> {
     }
   }
 
-  // Animate sign images in sequence
   void startAnimation() async {
     setState(() {
       isPlaying = true;
     });
 
     for (int i = 0; i < imagePaths.length; i++) {
-      if (!isPlaying) return; // Stop animation if paused
-      await Future.delayed(Duration(milliseconds: 800)); // Delay per frame
+      if (!isPlaying) return;
+      await Future.delayed(Duration(milliseconds: 800));
       if (mounted) {
         setState(() {
           currentIndex = i;
@@ -79,14 +87,12 @@ class _SignAnimatorState extends State<SignAnimator> {
     });
   }
 
-  // Stop the animation
   void stopAnimation() {
     setState(() {
       isPlaying = false;
     });
   }
 
-  // Restart the animation
   void restartAnimation() {
     if (imagePaths.isNotEmpty) {
       setState(() {
@@ -96,10 +102,31 @@ class _SignAnimatorState extends State<SignAnimator> {
     }
   }
 
+  void listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize();
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (result) {
+            setState(() {
+              _spokenText = result.recognizedWords;
+              _controller.text = _spokenText;
+              convertTextToSign(_spokenText);
+            });
+          },
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Sign Language Animator")),
+      appBar: AppBar(title: Text("Sign Language Communicator")),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -109,12 +136,30 @@ class _SignAnimatorState extends State<SignAnimator> {
               decoration: InputDecoration(
                 labelText: "Enter Text",
                 border: OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () => convertTextToSign(_controller.text),
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () => convertTextToSign(_controller.text),
+                    ),
+                    IconButton(
+                      icon: Icon(_isListening ? Icons.mic : Icons.mic_none),
+                      onPressed: listen,
+                    ),
+                  ],
                 ),
               ),
             ),
+            SizedBox(height: 20),
+
+            // Optional: Show recognized voice text
+            if (_spokenText.isNotEmpty)
+              Text(
+                'You said: $_spokenText',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+
             SizedBox(height: 20),
 
             // Display sign animation
@@ -145,7 +190,8 @@ class _SignAnimatorState extends State<SignAnimator> {
                           height: 200,
                         )
                       : Text(
-                          "Enter text to translate",
+                          "Enter text or speak to translate",
+                          textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 16, color: Colors.black54),
                         ),
                 ),

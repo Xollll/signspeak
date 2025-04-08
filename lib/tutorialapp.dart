@@ -24,7 +24,7 @@ class AppUsageTutorialPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'This app helps you translate, learn, and communicate using sign language. Here’s how to get started:',
+                  'This app helps you translate, learn and communicate using sign language. Here’s how to get started:',
                   style: TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 24),
@@ -73,7 +73,7 @@ class AppUsageTutorialPage extends StatelessWidget {
   await prefs.setBool('hasSeenTutorial', true);  // Mark the tutorial as seen
 
   // Navigate to the homepage after the tutorial is done
-  Navigator.pushReplacementNamed(context, '/home');  // Or use the actual route for your homepage
+  Navigator.pushReplacementNamed(context, '/home');  
 },
 
               child: const Text("Continue to App", style: TextStyle(fontSize: 16)),
