@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:signspeak/communication/communicator.dart';
+import 'package:signspeak/tutorialpage/tutorial.dart';
 import 'firebase_options.dart';
 import 'package:signspeak/dashboard/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,18 +20,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-
-      initialRoute: '/login',
-      routes: {
-        '/login': (context) => const LoginPage(),
-        '/home': (context) => const Homepage(),
-        '/translation': (context) => TranslateLang(),
-        '/communication': (context) => SignAnimator(),
-      },
-
-      home: LoginPage(),
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, 
+    
+    initialRoute: '/login',
+  routes: {
+    '/login': (context) => const LoginPage(),
+    '/home': (context) => const Homepage(),
+    '/tutorial': (context) => const TutorialPage(),
+    '/communication': (context) =>  SignAnimator(),
+  },
+    
+    home: LoginPage());
   }
 }
