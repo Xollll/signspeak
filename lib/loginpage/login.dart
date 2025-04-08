@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:signspeak/dashboard/homepage.dart';
 import 'package:signspeak/loginpage/register.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_button/sign_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -32,47 +33,51 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _login() async {
-    if (_formKey.currentState == null || !_formKey.currentState!.validate()) {
-      print("Form validation failed or _formKey is null.");
-      return;
-    }
-    setState(() {
-      _isLoading = true;
-    });
+  if (_formKey.currentState == null || !_formKey.currentState!.validate()) {
+    print("Form validation failed or _formKey is null.");
+    return;
+  }
+  setState(() {
+    _isLoading = true;
+  });
 
-    try {
-      // First, check if the email exists in Firebase Auth
+  try {
+    // First, check if the email exists in Firebase Auth
+    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
 
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+    print("Login successful! User: ${userCredential.user?.email}");
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Successful!")));
 
-      print("Login successful! User: ${userCredential.user?.email}");
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Login Successful!")));
+    final prefs = await SharedPreferences.getInstance();
+    bool seenTutorial = prefs.getBool('hasSeenTutorial') ?? false;
 
+    if (!seenTutorial) {
+      // If the user has not seen the tutorial, navigate to the tutorial page
+      Navigator.pushReplacementNamed(context, '/app_usage_tutorial');  // Ensure '/tutorial' is set in the routes
+    } else {
+      // Otherwise, navigate to the homepage
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Homepage()),
+        MaterialPageRoute(builder: (context) => const Homepage()),
       );
-    } on FirebaseAuthException catch (e) {
-      String message = "No user data found.";
-      if (e.code == 'user-not-found') {
-        message = "No user found with this email.";
-      } else if (e.code == 'wrong-password') {
-        message = "Incorrect password.";
-      }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
+  } on FirebaseAuthException catch (e) {
+    String message = "No user data found.";
+    if (e.code == 'user-not-found') {
+      message = "No user found with this email.";
+    } else if (e.code == 'wrong-password') {
+      message = "Incorrect password.";
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  } finally {
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
 
   Future<void> _signInWithGoogle() async {
     setState(() {

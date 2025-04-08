@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:signspeak/dashboard/homepage.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -105,6 +106,13 @@ class _RegisterPageState extends State<RegisterPage> {
       // Ensure user is properly reloaded
       await userCredential.user!.reload();
 
+      // Save tutorial flag in SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(
+        'hasSeenTutorial',
+        false,
+      ); // Set to false for tutorial screen
+
       _showSuccessNotification("Registration Successful!");
 
       // Stop loading before navigating
@@ -112,14 +120,22 @@ class _RegisterPageState extends State<RegisterPage> {
         _isLoading = false;
       });
 
-      // Navigate to homepage
-      // Ensure user is still logged in
+      // Navigate to the appropriate screen based on the flag
       if (FirebaseAuth.instance.currentUser != null) {
-        // Navigate to homepage
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Homepage()),
-        );
+        // Check if user has seen tutorial, navigate accordingly
+        final prefs = await SharedPreferences.getInstance();
+        bool hasSeenTutorial = prefs.getBool('hasSeenTutorial') ?? false;
+
+        if (hasSeenTutorial) {
+          // Navigate to Homepage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Homepage()),
+          );
+        } else {
+          // Navigate to Tutorial Page
+          Navigator.pushReplacementNamed(context, '/app_usage_tutorial');
+        }
       }
     } on FirebaseAuthException catch (e) {
       _showErrorNotification(e.message ?? "Registration failed");
