@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   routes: {
     '/login': (context) => const LoginPage(),
     '/home': (context) => const Homepage(),
-    
+    //'/tutorial': (context) => const TutorialPage(),
     '/communication': (context) =>  SignAnimator(),
   },
     

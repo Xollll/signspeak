@@ -6,8 +6,11 @@ class Homepage extends StatelessWidget {
 
   void _logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
-    Navigator.pushNamedAndRemoveUntil(context,
-        '/login', (Route<dynamic> route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/login',
+      (Route<dynamic> route) => false,
+    );
   }
 
   void _navigateToTranslation(BuildContext context) {
@@ -16,6 +19,10 @@ class Homepage extends StatelessWidget {
 
   void _navigateToCommunication(BuildContext context) {
     Navigator.pushNamed(context, '/communication');
+  }
+
+  void _navigateToTutorial(BuildContext context) {
+    Navigator.pushNamed(context, '/tutorial');
   }
 
   @override
@@ -30,26 +37,52 @@ class Homepage extends StatelessWidget {
           onPressed: () => _logout(context),
         ),
         title: Text("Welcome, $userName"),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blueGrey,
       ),
-      body: Center(
+      backgroundColor: Colors.blueGrey,
+      body: SafeArea(
+        
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
             children: [
-              _buildCard(
-                context,
-                icon: Icons.translate,
-                title: 'Translations',
-                onTap: () => _navigateToTranslation(context),
+              // Left side - Recognize / Translations
+              Expanded(
+                flex: 1,
+                child: _buildCard(
+                  context,
+                  icon: Icons.translate,
+                  title: 'Recognize',
+                  onTap: () => _navigateToTranslation(context),
+                  height: double.infinity,
+                  
+                ),
               ),
-              const SizedBox(height: 20),
-              _buildCard(
-                context,
-                icon: Icons.chat,
-                title: 'Communication',
-                onTap: () => _navigateToCommunication(context),
+              const SizedBox(width: 16),
+              // Right side - stacked Communication and Tutorial
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: _buildCard(
+                        context,
+                        icon: Icons.chat,
+                        title: 'Communicate',
+                        onTap: () => _navigateToCommunication(context),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: _buildCard(
+                        context,
+                        icon: Icons.menu_book,
+                        title: 'Tutorial',
+                        onTap: () => _navigateToTutorial(context),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -58,26 +91,34 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(BuildContext context,
-      {required IconData icon,
-      required String title,
-      required VoidCallback onTap}) {
+  Widget _buildCard(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    double? height,
+  }) {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         child: Container(
+          height: height,
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-          child: Row(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, size: 40, color: Colors.green),
-              const SizedBox(width: 20),
+              const SizedBox(height: 16),
               Text(
                 title,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           ),
