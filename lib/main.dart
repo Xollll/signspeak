@@ -5,6 +5,7 @@ import 'firebase_options.dart';
 import 'package:signspeak/dashboard/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:signspeak/loginpage/login.dart';
+import 'package:signspeak/translation/translatelang.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,16 +19,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, 
-    
-    initialRoute: '/login',
-  routes: {
-    '/login': (context) => const LoginPage(),
-    '/home': (context) => const Homepage(),
-    
-    '/communication': (context) =>  SignAnimator(),
-  },
-    
-    home: LoginPage());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/home': (context) => const Homepage(),
+        '/translation': (context) => TranslateLang(),
+        '/communication': (context) => SignAnimator(),
+      },
+
+      home: LoginPage(),
+    );
   }
 }

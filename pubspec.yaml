@@ -91,6 +91,7 @@ flutter:
     - assets/images/sign/X.png
     - assets/images/sign/Y.png
     - assets/images/sign/Z.png
+    - assets/images/translatelang.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
