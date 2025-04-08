@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sign_button/sign_button.dart';
 import 'package:signspeak/dashboard/homepage.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -21,6 +23,9 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   bool _isLoading = false;
+
+  // Initialize GoogleSignIn instance
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // Show success notification
   void _showSuccessNotification(String message) {
@@ -128,6 +133,77 @@ class _RegisterPageState extends State<RegisterPage> {
       });
     } catch (e) {
       _showErrorNotification("An error occurred: ${e.toString()}");
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  // Google Sign-In Implementation
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Begin interactive sign in process
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) {
+        // User canceled the sign-in
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
+      // Obtain auth details from request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // Create new credential for Firebase
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in to Firebase with the Google credential
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
+
+      // Check if this is a new user
+      final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+
+      if (isNewUser) {
+        // Store new user details in Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set({
+              'full_name': userCredential.user!.displayName ?? '',
+              'username':
+                  googleUser.email.split('@')[0], // Create username from email
+              'email': userCredential.user!.email ?? '',
+              'created_at': Timestamp.now(),
+              'auth_provider': 'google',
+            });
+
+        _showSuccessNotification("Registration with Google Successful!");
+      } else {
+        _showSuccessNotification("Welcome back!");
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      // Navigate to homepage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Homepage()),
+      );
+    } catch (e) {
+      _showErrorNotification("Google Sign-In failed: ${e.toString()}");
       setState(() {
         _isLoading = false;
       });
@@ -299,18 +375,32 @@ class _RegisterPageState extends State<RegisterPage> {
                                 : Text("Register"),
                       ),
 
-                      SizedBox(height: 20),
-                      Text("Or", style: TextStyle(fontSize: 18)),
-                      SizedBox(height: 20),
-
-                      // Google Sign-In Button
-                      //SignInButton(
-                      // Buttons.google,
-                      // onPressed: () {
-                      // TODO: Implement Google Sign-In
-                      // print("Google Sign-In clicked");
-                      //},
-                      //),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Divider(thickness: 1, color: Colors.grey),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              "OR",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Divider(thickness: 1, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      // Google Sign-In Button - Fixed implementation
+                      SignInButton(
+                        buttonType: ButtonType.google,
+                        btnText: 'Register with Google',
+                        onPressed: _isLoading ? null : _signInWithGoogle,
+                      ),
                       SizedBox(height: 20),
 
                       // Login Link

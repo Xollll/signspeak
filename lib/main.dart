@@ -20,16 +20,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, 
-    
-    initialRoute: '/login',
-  routes: {
-    '/login': (context) => const LoginPage(),
-    '/home': (context) => const Homepage(),
-    '/tutorial': (context) => const TutorialPage(),
-    '/communication': (context) =>  SignAnimator(),
-  },
-    
-    home: LoginPage());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/home': (context) => const Homepage(),
+        '/tutorial': (context) => const TutorialPage(),
+        '/translation': (context) => TranslateLang(),
+        '/communication': (context) => SignAnimator(),
+      },
+
+      home: LoginPage(),
+    );
   }
 }
