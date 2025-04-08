@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:signspeak/communication/communicator.dart';
-import 'package:signspeak/tutorialapp';
+import 'package:signspeak/tutorialapp.dart';
 import 'package:signspeak/tutorialpage/tutorial.dart';
 import 'firebase_options.dart';
 import 'package:signspeak/dashboard/homepage.dart';
