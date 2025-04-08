@@ -22,18 +22,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
-      initialRoute: '/login',
+      home: LoginPage(), // Default route 
       routes: {
         '/login': (context) => const LoginPage(),
         '/app_usage_tutorial': (context) => const AppUsageTutorialPage(),
         '/home': (context) => const Homepage(),
         '/tutorial': (context) => const TutorialPage(),
         '/communication': (context) => SignAnimator(),
-        
       },
-
-      home: LoginPage(), // Default route if no initial route is set
     );
   }
 }
