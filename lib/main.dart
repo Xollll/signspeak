@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:signspeak/communication/communicator.dart';
+import 'package:signspeak/tutorialapp.dart';
 import 'package:signspeak/tutorialpage/tutorial.dart';
 import 'firebase_options.dart';
 import 'package:signspeak/dashboard/homepage.dart';
@@ -22,17 +23,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
-      initialRoute: '/login',
+      home: LoginPage(), // Default route 
       routes: {
         '/login': (context) => const LoginPage(),
+        '/app_usage_tutorial': (context) => const AppUsageTutorialPage(),
         '/home': (context) => const Homepage(),
         '/tutorial': (context) => const TutorialPage(),
-        '/translation': (context) => TranslateLang(),
         '/communication': (context) => SignAnimator(),
       },
-
-      home: LoginPage(),
     );
   }
 }
