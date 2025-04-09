@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SignAnimator extends StatefulWidget {
   @override
@@ -11,10 +10,6 @@ class _SignAnimatorState extends State<SignAnimator> {
   List<String> imagePaths = [];
   int currentIndex = 0;
   bool isPlaying = false;
-
-  late stt.SpeechToText _speech;
-  bool _isListening = false;
-  String _spokenText = '';
 
   final Map<String, String> signImages = {
     'A': 'assets/images/sign/A.png',
@@ -44,12 +39,6 @@ class _SignAnimatorState extends State<SignAnimator> {
     'Y': 'assets/images/sign/Y.png',
     'Z': 'assets/images/sign/Z.png',
   };
-
-  @override
-  void initState() {
-    super.initState();
-    _speech = stt.SpeechToText();
-  }
 
   void convertTextToSign(String text) {
     setState(() {
@@ -102,27 +91,6 @@ class _SignAnimatorState extends State<SignAnimator> {
     }
   }
 
-  void listen() async {
-    if (!_isListening) {
-      bool available = await _speech.initialize();
-      if (available) {
-        setState(() => _isListening = true);
-        _speech.listen(
-          onResult: (result) {
-            setState(() {
-              _spokenText = result.recognizedWords;
-              _controller.text = _spokenText;
-              convertTextToSign(_spokenText);
-            });
-          },
-        );
-      }
-    } else {
-      setState(() => _isListening = false);
-      _speech.stop();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,29 +104,13 @@ class _SignAnimatorState extends State<SignAnimator> {
               decoration: InputDecoration(
                 labelText: "Enter Text",
                 border: OutlineInputBorder(),
-                suffixIcon: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.send),
-                      onPressed: () => convertTextToSign(_controller.text),
-                    ),
-                    IconButton(
-                      icon: Icon(_isListening ? Icons.mic : Icons.mic_none),
-                      onPressed: listen,
-                    ),
-                  ],
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () => convertTextToSign(_controller.text),
                 ),
               ),
             ),
             SizedBox(height: 20),
-
-            // Optional: Show recognized voice text
-            if (_spokenText.isNotEmpty)
-              Text(
-                'You said: $_spokenText',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              ),
 
             SizedBox(height: 20),
 
@@ -190,7 +142,7 @@ class _SignAnimatorState extends State<SignAnimator> {
                           height: 200,
                         )
                       : Text(
-                          "Enter text or speak to translate",
+                          "Enter text to translate",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 16, color: Colors.black54),
                         ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+
+
 class TranslateLang extends StatefulWidget {
   @override
   State<TranslateLang> createState() => _TranslateLangState();
@@ -12,7 +14,7 @@ class _TranslateLangState extends State<TranslateLang> {
     setState(() {
       _selectedLanguage = language;
     });
-    // You might want to navigate back or do something with the selected language
+    
     Navigator.pop(context, _selectedLanguage);
   }
 
@@ -50,7 +52,10 @@ class _TranslateLangState extends State<TranslateLang> {
               ),
               const SizedBox(height: 40),
               ElevatedButton(
-                onPressed: () => _selectLanguage('Malay'),
+                onPressed: () {
+                  _selectLanguage('Malay');
+                  Navigator.pushNamed(context, '/signcam');
+                },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -61,9 +66,10 @@ class _TranslateLangState extends State<TranslateLang> {
                 ),
                 child: const Text('Malay'),
               ),
+
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () => _selectLanguage('English'),
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(

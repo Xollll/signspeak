@@ -18,6 +18,9 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
 
+
+
+
 environment:
   sdk: ^3.7.2
 
@@ -32,7 +35,8 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.2.2
-  speech_to_text: ^6.4.1
+  camera: ^0.10.5+4
+  
     
 
   # The following adds the Cupertino Icons font to your application.
