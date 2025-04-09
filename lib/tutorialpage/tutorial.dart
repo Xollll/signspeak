@@ -5,7 +5,10 @@ class TutorialPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> alphabets = List.generate(26, (index) => String.fromCharCode(65 + index));
+    final List<String> alphabets = List.generate(
+      26,
+      (index) => String.fromCharCode(65 + index),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +30,9 @@ class TutorialPage extends StatelessWidget {
             String imagePath = 'assets/images/sign/$letter.png';
 
             return Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               elevation: 4,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -38,7 +43,9 @@ class TutorialPage extends StatelessWidget {
                       child: Image.asset(
                         imagePath,
                         fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+                        errorBuilder:
+                            (context, error, stackTrace) =>
+                                const Icon(Icons.image_not_supported),
                       ),
                     ),
                   ),
@@ -46,7 +53,10 @@ class TutorialPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Text(
                       letter,
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],

@@ -11,7 +11,6 @@ class _SignAnimatorState extends State<SignAnimator> {
   int currentIndex = 0;
   bool isPlaying = false;
 
-  // Map of letters to image assets
   final Map<String, String> signImages = {
     'A': 'assets/images/sign/A.png',
     'B': 'assets/images/sign/B.png',
@@ -41,7 +40,6 @@ class _SignAnimatorState extends State<SignAnimator> {
     'Z': 'assets/images/sign/Z.png',
   };
 
-  // Convert user input text to sign images
   void convertTextToSign(String text) {
     setState(() {
       imagePaths = [];
@@ -58,15 +56,14 @@ class _SignAnimatorState extends State<SignAnimator> {
     }
   }
 
-  // Animate sign images in sequence
   void startAnimation() async {
     setState(() {
       isPlaying = true;
     });
 
     for (int i = 0; i < imagePaths.length; i++) {
-      if (!isPlaying) return; // Stop animation if paused
-      await Future.delayed(Duration(milliseconds: 800)); // Delay per frame
+      if (!isPlaying) return;
+      await Future.delayed(Duration(milliseconds: 800));
       if (mounted) {
         setState(() {
           currentIndex = i;
@@ -79,14 +76,12 @@ class _SignAnimatorState extends State<SignAnimator> {
     });
   }
 
-  // Stop the animation
   void stopAnimation() {
     setState(() {
       isPlaying = false;
     });
   }
 
-  // Restart the animation
   void restartAnimation() {
     if (imagePaths.isNotEmpty) {
       setState(() {
@@ -99,7 +94,7 @@ class _SignAnimatorState extends State<SignAnimator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Sign Language Animator")),
+      appBar: AppBar(title: Text("Sign Language Communicator")),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -115,6 +110,8 @@ class _SignAnimatorState extends State<SignAnimator> {
                 ),
               ),
             ),
+            SizedBox(height: 20),
+
             SizedBox(height: 20),
 
             // Display sign animation
@@ -146,6 +143,7 @@ class _SignAnimatorState extends State<SignAnimator> {
                         )
                       : Text(
                           "Enter text to translate",
+                          textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 16, color: Colors.black54),
                         ),
                 ),

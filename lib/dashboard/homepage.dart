@@ -39,9 +39,7 @@ class Homepage extends StatelessWidget {
         title: Text("Welcome, $userName"),
         backgroundColor: Colors.blueGrey,
       ),
-      backgroundColor: Colors.blueGrey,
       body: SafeArea(
-        
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
@@ -53,9 +51,9 @@ class Homepage extends StatelessWidget {
                   context,
                   icon: Icons.translate,
                   title: 'Recognize',
+                  color: Colors.lightBlueAccent,
                   onTap: () => _navigateToTranslation(context),
                   height: double.infinity,
-                  
                 ),
               ),
               const SizedBox(width: 16),
@@ -69,6 +67,7 @@ class Homepage extends StatelessWidget {
                         context,
                         icon: Icons.chat,
                         title: 'Communicate',
+                        color: Colors.tealAccent,
                         onTap: () => _navigateToCommunication(context),
                       ),
                     ),
@@ -77,7 +76,8 @@ class Homepage extends StatelessWidget {
                       child: _buildCard(
                         context,
                         icon: Icons.menu_book,
-                        title: 'Tutorial',
+                        title: 'Sign Tutorial',
+                        color: Colors.orangeAccent,
                         onTap: () => _navigateToTutorial(context),
                       ),
                     ),
@@ -96,6 +96,7 @@ class Homepage extends StatelessWidget {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    required Color color,
     double? height,
   }) {
     return Card(
@@ -108,16 +109,21 @@ class Homepage extends StatelessWidget {
           height: height,
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 40, color: Colors.green),
+              Icon(icon, size: 40, color: Colors.white),
               const SizedBox(height: 16),
               Text(
                 title,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
               ),
             ],
